@@ -9,6 +9,7 @@ Dependencies
 This module depends on
 
 - [concat](http://forge.puppetlabs.com/ripienaar/concat)
+- [apache](https://forge.puppetlabs.com/puppetlabs/apache)
 
 Installation
 ------------
