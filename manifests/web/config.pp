@@ -1,13 +1,15 @@
 # Class: graphite::web::config
 #
 class graphite::web::config(
-  $config_dir     = $::graphite::web::params::config_dir,
-  $log_dir        = $::graphite::web::params::log_dir,
-  $service_name   = $::graphite::web::params::service_name,
-  $wsgi_file      = $::graphite::web::params::wsgi_file,
-  $docroot        = $::graphite::web::params::docroot,
-  $python_sitelib = $::graphite::web::params::python_sitelib,
-  $port           = $::graphite::web::params::port
+  $config_dir             = $::graphite::web::params::config_dir,
+  $log_dir                = $::graphite::web::params::log_dir,
+  $service_name           = $::graphite::web::params::service_name,
+  $wsgi_file              = $::graphite::web::params::wsgi_file,
+  $docroot                = $::graphite::web::params::docroot,
+  $python_sitelib         = $::graphite::web::params::python_sitelib,
+  $port                   = $::graphite::web::params::port,
+  $memcached_hosts        = undef,
+  $default_cache_duration = undef
 ) inherits graphite::web::params {
   include graphite::carbon::config
 
