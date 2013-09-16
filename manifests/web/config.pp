@@ -26,7 +26,8 @@ class graphite::web::config(
     port      => $port,
     docroot   => "${docroot}",
     aliases   => [
-      {alias => '/media', path => "${python_sitelib}/django/contrib/admin/media/"}
+      {alias => '/media', path => "${python_sitelib}/django/contrib/admin/media/"},
+      {alias => '/content', path => "${docroot}/content"},
     ],
     wsgi_daemon_process         => 'wsgi',
     wsgi_daemon_process_options =>
@@ -34,7 +35,6 @@ class graphite::web::config(
     wsgi_process_group          => 'wsgi',
     wsgi_script_aliases         => { '/' => $wsgi_file },
     custom_fragment => template("graphite/apache-fragement.erb"),
-
   }
 
   exec{"python manage.py syncdb --noinput":
