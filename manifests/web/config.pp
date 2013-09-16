@@ -9,6 +9,8 @@ class graphite::web::config(
   $python_sitelib = $::graphite::web::params::python_sitelib,
   $port           = $::graphite::web::params::port
 ) inherits graphite::web::params {
+  include graphite::carbon::config
+
   file { 'local_settings.py':
     ensure    => file,
     path      => "${config_dir}/local_settings.py",
@@ -33,6 +35,13 @@ class graphite::web::config(
     wsgi_script_aliases         => { '/' => $wsgi_file },
     custom_fragment => template("graphite/apache-fragement.erb"),
 
+  }
+
+  exec{"python manage.py syncdb --noinput":
+    path => ["/usr/bin", "/usr/local/bin"],
+    require => File['local_settings.py'],
+    creates => "${::graphite::carbon::config::storage_dir}/graphite.db",
+    cwd => "${python_sitelib}/graphite"
   }
 }
 
