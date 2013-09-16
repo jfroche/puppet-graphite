@@ -1,14 +1,19 @@
 # Class: graphite::carbon::config
 #
-class graphite::carbon::config {
-  include concat::setup
-
-  $storage_dir  = $::graphite::carbon::params::storage_dir
-  $config_dir   = $::graphite::carbon::params::config_dir
-  $service_name = $::graphite::carbon::params::service_name
-  $www_group    = $::graphite::carbon::params::www_group
+class graphite::carbon::config(
+  $storage_dir  = $::graphite::carbon::params::storage_dir,
+  $config_dir   = $::graphite::carbon::params::config_dir,
+  $service_name = $::graphite::carbon::params::service_name,
+  $www_group    = $::graphite::carbon::params::www_group,
   $www_user     = $::graphite::carbon::params::www_user
-
+) inherits graphite::carbon::params {
+  include concat::setup
+  
+  file {$config_dir: 
+    ensure => directory,
+    mode => 644
+  }
+  
   concat { "${config_dir}/storage-schemas.conf":
     group  => '0',
     mode   => '0644',
@@ -22,13 +27,10 @@ class graphite::carbon::config {
     source => 'puppet:///modules/graphite/storage-schemas.conf',
   }
 
-  if $::osfamily == 'Debian' {
-    # Fixme: needs abstraction
-    file { "${config_dir}/carbon.conf":
-      ensure  => present,
-      mode    => '0640',
-      content => template("graphite/carbon.conf.${::osfamily}.erb"),
-    }
+  file { "${config_dir}/carbon.conf":
+    ensure  => present,
+    mode    => '0640',
+    content => template("graphite/carbon.conf.erb"),
   }
   if $storage_dir == "/opt/graphite/storage" {
     file{"/opt/graphite": 
