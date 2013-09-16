@@ -27,5 +27,9 @@ class graphite::carbon::params {
     /(?i:RedHat)/ => 'apache',
     default       => 'apache',
   }
+
+  $max_cache_size = 1000000
+  $max_updates_per_second = 200
+  $max_creates_per_second = 50
 }
 
