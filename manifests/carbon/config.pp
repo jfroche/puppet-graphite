@@ -3,6 +3,7 @@
 class graphite::carbon::config {
   include concat::setup
 
+  $storage_dir  = $::graphite::carbon::params::storage_dir
   $config_dir   = $::graphite::carbon::params::config_dir
   $service_name = $::graphite::carbon::params::service_name
   $www_group    = $::graphite::carbon::params::www_group
@@ -29,16 +30,20 @@ class graphite::carbon::config {
       content => template("graphite/carbon.conf.${::osfamily}.erb"),
     }
   }
+  if $storage_dir == "/opt/graphite/storage" {
+    file{"/opt/graphite": 
+      ensure => directory
+    }
+  }
+  file { "${storage_dir}":
+    ensure  => directory,
+    recurse => true,
+    owner   => $www_user,
+    group   => $www_group,
+    before  => Service[$service_name],
+  }
 
   if $::osfamily == 'Debian' {
-    file { '/opt/graphite/storage':
-      ensure  => directory,
-      recurse => true,
-      owner   => $www_user,
-      group   => $www_group,
-      before  => Service[$service_name],
-    }
-
     file { '/etc/init.d/carbon-cache':
       ensure  => present,
       mode    => '0755',

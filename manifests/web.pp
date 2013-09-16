@@ -19,6 +19,8 @@ class graphite::web (
   $manage_httpd = $::graphite::params::config_dir,
 ) {
   include apache
+  include apache::mod::wsgi
+  include apache::mod::alias
   include graphite::web::params
   include graphite::web::package
   include graphite::web::config
