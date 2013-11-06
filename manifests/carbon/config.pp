@@ -11,10 +11,10 @@ class graphite::carbon::config(
   $max_creates_per_second = $::graphite::carbon::params::max_creates_per_second,
 ) inherits graphite::carbon::params {
   include concat::setup
-  
-  file {$config_dir: 
+
+  file {$config_dir:
     ensure => directory,
-    mode => 644
+    mode   => '0644',
   }
 
   concat { "${config_dir}/storage-schemas.conf":
@@ -33,10 +33,10 @@ class graphite::carbon::config(
   file { "${config_dir}/carbon.conf":
     ensure  => present,
     mode    => '0640',
-    content => template("graphite/carbon.conf.erb"),
+    content => template('graphite/carbon.conf.erb'),
   }
-  if $storage_dir == "/opt/graphite/storage" {
-    file{"/opt/graphite": 
+  if $storage_dir == '/opt/graphite/storage' {
+    file{'/opt/graphite':
       ensure => directory
     }
   }
