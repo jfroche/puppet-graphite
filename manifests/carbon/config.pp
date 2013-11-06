@@ -9,8 +9,9 @@ class graphite::carbon::config(
   $max_cache_size         = $::graphite::carbon::params::max_cache_size,
   $max_updates_per_second = $::graphite::carbon::params::max_updates_per_second,
   $max_creates_per_second = $::graphite::carbon::params::max_creates_per_second,
-) inherits graphite::carbon::params {
+) {
   include concat::setup
+  include graphite::carbon::params
 
   file {$config_dir:
     ensure => directory,
@@ -40,7 +41,7 @@ class graphite::carbon::config(
       ensure => directory
     }
   }
-  file { "${storage_dir}":
+  file { $storage_dir:
     ensure  => directory,
     recurse => true,
     owner   => $www_user,

@@ -31,12 +31,12 @@ class graphite::web::params {
   }
 
   $python_version = $::operatingsystem ? {
-    /RedHat|CentOS/ => "python2.6", # graphite won't work on python 2.4 anyway
+    /RedHat|CentOS/ => 'python2.6', # graphite won't work on python 2.4 anyway
     /Ubuntu/ => $::operatingsystemrelease ? {
-      /^1[01]\./ => "python2.6",
-      default => "python2.7"
+      /^1[01]\./ => 'python2.6',
+      default => 'python2.7'
     },
-    default => "python2.6"
+    default => 'python2.6'
   }
   $python_sitelib = "/usr/lib/${python_version}/site-packages"
 }

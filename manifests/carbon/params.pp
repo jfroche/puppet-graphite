@@ -2,7 +2,7 @@
 #
 class graphite::carbon::params {
 
-  $storage_dir = "/opt/graphite/storage"
+  $storage_dir = '/opt/graphite/storage'
 
   $config_dir = $::osfamily ? {
     /(?i:Debian)/ => '/opt/graphite/conf',

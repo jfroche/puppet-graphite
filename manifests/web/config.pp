@@ -10,8 +10,9 @@ class graphite::web::config(
   $port                   = $::graphite::web::params::port,
   $memcached_hosts        = undef,
   $default_cache_duration = undef
-) inherits graphite::web::params {
+) {
   include graphite::carbon::config
+  include graphite::web::params
 
   file { 'local_settings.py':
     ensure    => file,
@@ -24,26 +25,30 @@ class graphite::web::config(
     require   => Package['graphite-web'],
   }
 
-  apache::vhost {graphite:
-    port      => $port,
-    docroot   => "${docroot}",
-    aliases   => [
-      {alias => '/media', path => "${python_sitelib}/django/contrib/admin/media/"},
-      {alias => '/content', path => "${docroot}/content"},
+  apache::vhost { 'graphite':
+    port                        => $port,
+    docroot                     => $docroot,
+    aliases                     => [
+      { alias => '/media',
+        path  => "${python_sitelib}/django/contrib/admin/media/"},
+      { alias => '/content',
+        path  => "${docroot}/content"},
     ],
     wsgi_daemon_process         => 'wsgi',
-    wsgi_daemon_process_options =>
-        { processes => '2', threads => '15', display-name => '%{GROUP}' },
+    wsgi_daemon_process_options => {
+      processes    => '2',
+      threads      => '15',
+      display-name => '%{GROUP}' },
     wsgi_process_group          => 'wsgi',
     wsgi_script_aliases         => { '/' => $wsgi_file },
-    custom_fragment => template("graphite/apache-fragement.erb"),
+    custom_fragment             => template('graphite/apache-fragement.erb'),
   }
 
-  exec{"python manage.py syncdb --noinput":
-    path => ["/usr/bin", "/usr/local/bin"],
+  exec{'python manage.py syncdb --noinput':
+    path    => ['/usr/bin', '/usr/local/bin'],
     require => File['local_settings.py'],
     creates => "${::graphite::carbon::config::storage_dir}/graphite.db",
-    cwd => "${python_sitelib}/graphite"
+    cwd     => "${python_sitelib}/graphite"
   }
 }
 
