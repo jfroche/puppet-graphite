@@ -19,6 +19,7 @@ class graphite::carbon::config(
   }
 
   concat { "${config_dir}/storage-schemas.conf":
+    ensure => present,
     group  => '0',
     mode   => '0644',
     owner  => '0',
