@@ -27,6 +27,7 @@ class graphite::carbon::config(
   }
 
   concat::fragment { 'header':
+    ensure => present,
     target => "${config_dir}/storage-schemas.conf",
     order  => 0,
     source => 'puppet:///modules/graphite/storage-schemas.conf',
